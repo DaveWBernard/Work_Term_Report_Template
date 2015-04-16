@@ -1,7 +1,7 @@
 %/////////////////////////////////////////////////////////%
 %		   
 % file: 	Report.tex
-% version:	0.2 
+% version:	0.3 
 % modified:	25 Mar 2015
 % author:	David Bernard (bernardd@uvic.ca)
 % descr:	A document that follows the University of Victoria
@@ -80,6 +80,7 @@
 %			fancyhdr,			% see config in LAYOUT AND STYLING
 %			lastpage,			% used with (fancyhdr)
 			fullpage,			% set full page margins
+			tocloft, 			% table of contents - used to remove appendix page numbers
 			}
 \usepackage[hidelinks]{hyperref}	%hyperlinks
 	\hypersetup{
@@ -87,6 +88,8 @@
 				linktoc=all,     	%set to all if you want both sections and subsections linked
 %    			linkcolor=blue,  	%choose some color if you want links to stand out
 				}
+
+\usepackage[title,titletoc]{appendix} %appendix setup
 
 % fancyhdr settings
 %	\pagestyle{fancy}
@@ -182,22 +185,14 @@
 	}
 
 
-% Set up page numbering for appendices as (Appendix Letter) - (Page Number)
-\providecommand{\StartAppendices}{
-	\newpage
-	\newcounter{AppendixCounter}	
-	\renewcommand{\thepage}{\Alph{AppendixCounter} - \arabic{page}}
-}
 
-% Manually construct the section title for each appendix and then
-% add an entry to the ToC 
+
+% Manually construct the section title for each appendix
 \providecommand{\Appendix}[1]{
-	\newpage
-	\stepcounter{AppendixCounter}
+	\pagebreak
 	\setcounter{page}{1}
-	\section*{Appendix \Alph{AppendixCounter}\quad #1}
-	\addtocontents{toc}{\protect\contentsline{section}{Appendix \Alph{AppendixCounter}\quad #1}{}{}}
-	% \protect preserves the spacing in the ToC
+	\renewcommand{\thepage}{\thesection -\arabic{page}}
+	\section{#1}
 }
 
 
@@ -392,12 +387,18 @@ references here
 % 	   Appendices
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\StartAppendices
+\begin{appendices}
+	\addtocontents{toc}{\cftpagenumbersoff{section}}
+	
+	\Appendix{My appendix}
+	Here is some text for my appendix.
+	
+	\Appendix{Appendix 2}
+	new text
+	
+	\pagebreak
+\end{appendices}
 
-\Appendix{My appendix}
-Here is some text for my appendix.
 
-\Appendix{Appendix 2}
-new text
 
 \end{document}
